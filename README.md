@@ -5,7 +5,7 @@
 
 Product Content Administrator account:
  
-Username: admin@spaceagency.com
+Username: admin@spaceagency.com <br />
 Password: 123$rewQ
 
 
@@ -46,8 +46,8 @@ GET /api/products/id <br />
 GET /api/products?name=<mision name>&dateFrom=<date>&dateTo<date> (date format: yyyy-mm-dd) <br />
 
 POST /api/products (body: json) <br />
-```
 example body:
+```
 {
     "acquisitionDate": "2019-02-04T00:00:00",
     "price": 1000.00,    
