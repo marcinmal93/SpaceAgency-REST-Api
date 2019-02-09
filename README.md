@@ -24,7 +24,7 @@ example body:
     "missionTypeId": 1
 }
 ```
-<br />
+
 PUT /api/missions/id (body: json) <br />
 example body:
 ```
