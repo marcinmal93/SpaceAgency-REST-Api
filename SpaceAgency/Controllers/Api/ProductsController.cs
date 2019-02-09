@@ -21,16 +21,7 @@ namespace SpaceAgency.Controllers.Api
         {
             _context = new ApplicationDbContext();
         }
-
-
-        // GET /api/products
-//        public IEnumerable<Product> GetProducts()
-//        {
-//            return _context.Products.
-//                Include(p => p.Mission).
-//                Include(m => m.Mission.MissionType).
-//                ToList();
-//        }
+       
 
         // GET /api/products/id
         public IHttpActionResult GetProduct(int id)
@@ -45,7 +36,7 @@ namespace SpaceAgency.Controllers.Api
             return Ok(product);
         }
 
-        // GET /api/products?name=<name>
+        // GET /api/products?name=<name>&dateFrom=<yyyy-mm-dd>&dateTo=<yyyy-mm-dd>
         // 1900-01-01 and 3000-01-01 are default values 
         public IEnumerable<Product> GetProducts(string name="", string dateFrom = "1900-01-01", string dateTo = "3000-01-01")
         {
@@ -98,6 +89,7 @@ namespace SpaceAgency.Controllers.Api
 
         // PUT api/products/id
         [HttpPut]
+        [BasicAuthentication(Roles = Role.ProductContentAdministrator)]
         public void UpdateProduct(int id, ProductDto productDto)
         {
             if (!ModelState.IsValid)
@@ -115,6 +107,7 @@ namespace SpaceAgency.Controllers.Api
 
         // DELETE api/products/id
         [HttpDelete]
+        [BasicAuthentication(Roles = Role.ProductContentAdministrator)]
         public void DeleteProduct(int id)
         {
             var product = _context.Products.SingleOrDefault(p => p.Id == id);
