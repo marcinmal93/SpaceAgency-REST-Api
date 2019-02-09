@@ -24,13 +24,13 @@ namespace SpaceAgency.Controllers.Api
 
 
         // GET /api/products
-        public IEnumerable<Product> GetProducts()
-        {
-            return _context.Products.
-                Include(p => p.Mission).
-                Include(m => m.Mission.MissionType).
-                ToList();
-        }
+//        public IEnumerable<Product> GetProducts()
+//        {
+//            return _context.Products.
+//                Include(p => p.Mission).
+//                Include(m => m.Mission.MissionType).
+//                ToList();
+//        }
 
         // GET /api/products/id
         public IHttpActionResult GetProduct(int id)
@@ -46,36 +46,40 @@ namespace SpaceAgency.Controllers.Api
         }
 
         // GET /api/products?name=<name>
-        public IHttpActionResult GetProductByName(string name)
+        // 1900-01-01 and 3000-01-01 are default values 
+        public IEnumerable<Product> GetProducts(string name="", string dateFrom = "1900-01-01", string dateTo = "3000-01-01")
         {
-            var product = _context.Products.Include(p => p.Mission).
-                Include(m => m.Mission.MissionType).
-                SingleOrDefault(p => p.Mission.Name == name);
 
-            if (product == null)
-                return NotFound();
-
-            return Ok(product);
-        }
-
-        // GET /api/products?dateFrom=<yyyy-mm-dd>&dateTo=<yyyy-mm-dd>
-        // 1900-01-01 are default values 
-        public IHttpActionResult GetProductByDate(string dateFrom = "1900-01-01", string dateTo = "1900-01-01")
-        {
-            // DateTime format : yyyy-mm-dd
             DateTime dateTimeFrom = DateTime.Parse(dateFrom);
             DateTime dateTimeTo = DateTime.Parse(dateTo);
 
+            if (name != "")
+            {
+                var products = _context.Products.
+                    Include(p => p.Mission).
+                    Include(m => m.Mission.MissionType).
+                    Where(p => p.AcquisitionDate >= dateTimeFrom &&
+                               p.AcquisitionDate <= dateTimeTo &&
+                               p.Mission.Name == name).
+                    ToList();
 
-            var product = _context.Products.Include(p => p.Mission).
-                Include(m => m.Mission.MissionType).
-                SingleOrDefault(p => p.AcquisitionDate >= dateTimeFrom && p.AcquisitionDate <= dateTimeTo);
+                return products;
+            }
+            else
+            {
+                var products = _context.Products.
+                    Include(p => p.Mission).
+                    Include(m => m.Mission.MissionType).
+                    Where(p => p.AcquisitionDate >= dateTimeFrom &&
+                               p.AcquisitionDate <= dateTimeTo).
+                    ToList();
 
-            if (product == null)
-                return NotFound();
-
-            return Ok(product);
+                return products;
+            }
+            
+           
         }
+       
 
         // POST /api/products
         [HttpPost]
